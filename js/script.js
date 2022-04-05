@@ -1,58 +1,112 @@
 let play = document.getElementById("btn").addEventListener("click", griglia);
 let gioco = document.getElementById("gioco");
 let row = document.createElement("div");
+let result = document.getElementById("output");
+let click = 0;
+let flag = true;
 row.setAttribute("class", "row");
 
 
 function griglia(){
-    
+    click = 0;
+    flag = true;
+    let text = document.getElementById("text");
+    text.classList.add("hide");
     let select = document.getElementById("diff");
     let diffValue = select.options[select.selectedIndex].value;
     let gamecol = 0;
-    let gamerow = 0;
     switch(diffValue){
         case "easy":
+        default:
             gamecol = 100;
-            gamerow = 100;
             break;
         case "hard":
             gamecol = 81;
-            gamerow = 9;
             break;
         case "crazy":
             gamecol = 49;
-            gamerow = 7;
             break;
     }
    
     cols = creaColonne(gamecol, diffValue);
     row.innerHTML = " ";
+    result.innerHTML = " ";
     row.innerHTML = cols;
     gioco.append(row);
     let colorSwitch = document.querySelectorAll(".box");
-    for(c=0; c < colorSwitch.length; c++){
-        let d = c;
-        colorSwitch[c].addEventListener("click", colors);
+    let bombSwitch = document.querySelectorAll(".bomb");
+
+    for(let i=0; i < colorSwitch.length; i++){
+        console.log(i)
+        colorSwitch[i].classList.add("pointer");
+        if(flag === true){
+            colorSwitch[i].addEventListener("click", colors);
+        }
+        if(flag === false){
+            alert("ciao")
+            colorSwitch[i].removeEventListener("click", colors);
+        }
+        console.log(flag)
         function colors(){
-            colorSwitch[d].classList.add("clicked");
+            colorSwitch[i].classList.add("clicked");
+            click++;
+            flag = true;
+            colorSwitch[i].classList.remove("pointer");
+            this.removeEventListener("click", colors)
+            console.log(click)
+            if(click > 2 /* (colorSwitch.length - 16) */){
+                flag = false;
+                result.innerHTML = "Hai Vinto";
+            }
+            if(flag === false){
+                console.log(colorSwitch)
+                alert("ciao")
+                colorSwitch.removeEventListener("click", colors);
+            }
+        }
+        
+
+        
+    }
+    for(let i=0; i < bombSwitch.length; i++){
+        bombSwitch[i].addEventListener("click", bombColors);
+        
+        function bombColors(){
+            bombSwitch[i].innerHTML = '<i class="fa-solid fa-bomb"></i>';
+            bombSwitch[i].classList.add("bomb-clicked");
+            bombSwitch[i].classList.remove("pointer");
+            this.removeEventListener("click", bombColors)
+            result.innerHTML = "hai perso";
         }
     }
+
 }
 
+
+
 function creaColonne(numeroColonne, diff){
+    let bombs = [];
     let cols = " ";
-    for(i= 1; i<= numeroColonne; i++){
-        cols += `
+    let random;
+    while(bombs.length <16){
+        random = Math.floor((Math.random() * numeroColonne) + 1);
+        if(!bombs.includes(random)){
+            bombs.push(random);
+        }
+    }
+    console.log(bombs)
+    for(let i= 1; i<= numeroColonne; i++){
+        if(bombs.includes(i)){
+            cols += `
+            <div class="col box bomb box-${diff}">${i}</div>
+        `;
+        } else {
+            cols += `
             <div class="col box box-${diff}">${i}</div>
         `;
+        }
     }
 
     return cols;
 }
 
-/* for(let i =0; i< colorSwitch.length; i++){
-    colorSwitch[i].addEventListener("click", colors(colorSwitch[i]))
- }
- function colors(color){
-    color.classList.add("clicked")
- } */
