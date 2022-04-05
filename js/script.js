@@ -37,13 +37,8 @@ function griglia(){
     let bombSwitch = document.querySelectorAll(".bomb");
 
     for(let i=0; i < colorSwitch.length; i++){
-        console.log(i)
         colorSwitch[i].classList.add("pointer");
             colorSwitch[i].addEventListener("click", colors);
-            console.log(colorSwitch[i])
-            /* colorSwitch[i].removeEventListener("click", colors);
-            console.log(colorSwitch[i]) */
-        console.log(flag)
         function colors(){
             colorSwitch[i].classList.add("clicked");
             click++;
@@ -51,19 +46,14 @@ function griglia(){
             colorSwitch[i].classList.remove("pointer");
             this.removeEventListener("click", colors)
             console.log(click)
-            if(click > 2 /* (colorSwitch.length - 16) */){
+            if(click === (colorSwitch.length - 16)){
                 flag = false;
                 result.innerHTML = `
-                    hai vinto, hai liberato tutte e ${click} caselle
+                    hai vinto, hai liberato tutte e ${click} le caselle
                 `;
-            }
-            
-            if(flag === false){
-                for(let k = 0; k < colorSwitch.length; k++){
-                    this.removeEventListener("click", colors);
-                }
-            }
+            }  
         }
+  
         
 
         
@@ -77,7 +67,7 @@ function griglia(){
             bombSwitch[i].classList.remove("pointer");
             this.removeEventListener("click", bombColors)
             result.innerHTML = `
-                hai beccato la bomba dopo ${click} caselle
+                hai beccato la bomba dopo ${click - 1} caselle
             `;
             for(i=0; i< bombSwitch.length; i++){
                 bombSwitch[i].innerHTML = '<i class="fa-solid fa-bomb"></i>';
@@ -115,4 +105,3 @@ function creaColonne(numeroColonne, diff){
 
     return cols;
 }
-
