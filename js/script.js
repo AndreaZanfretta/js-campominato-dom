@@ -39,13 +39,10 @@ function griglia(){
     for(let i=0; i < colorSwitch.length; i++){
         console.log(i)
         colorSwitch[i].classList.add("pointer");
-        if(flag === true){
             colorSwitch[i].addEventListener("click", colors);
-        }
-        if(flag === false){
-            alert("ciao")
-            colorSwitch[i].removeEventListener("click", colors);
-        }
+            console.log(colorSwitch[i])
+            /* colorSwitch[i].removeEventListener("click", colors);
+            console.log(colorSwitch[i]) */
         console.log(flag)
         function colors(){
             colorSwitch[i].classList.add("clicked");
@@ -56,12 +53,15 @@ function griglia(){
             console.log(click)
             if(click > 2 /* (colorSwitch.length - 16) */){
                 flag = false;
-                result.innerHTML = "Hai Vinto";
+                result.innerHTML = `
+                    hai vinto, hai liberato tutte e ${click} caselle
+                `;
             }
+            
             if(flag === false){
-                console.log(colorSwitch)
-                alert("ciao")
-                colorSwitch.removeEventListener("click", colors);
+                for(let k = 0; k < colorSwitch.length; k++){
+                    this.removeEventListener("click", colors);
+                }
             }
         }
         
@@ -76,7 +76,13 @@ function griglia(){
             bombSwitch[i].classList.add("bomb-clicked");
             bombSwitch[i].classList.remove("pointer");
             this.removeEventListener("click", bombColors)
-            result.innerHTML = "hai perso";
+            result.innerHTML = `
+                hai beccato la bomba dopo ${click} caselle
+            `;
+            for(i=0; i< bombSwitch.length; i++){
+                bombSwitch[i].innerHTML = '<i class="fa-solid fa-bomb"></i>';
+                bombSwitch[i].classList.add("bomb-clicked");
+            }
         }
     }
 
